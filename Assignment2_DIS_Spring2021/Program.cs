@@ -431,13 +431,15 @@ namespace Assignment2_DIS_Spring2021
             {
                 var dictionary = new SortedDictionary<int, List<int>>();
 
-                //Console.WriteLine("Length is -> " + items.Length / 2);
+                //looping over the number of elements
                 for (int j = 0; j < items.Length / 2; j++)
                 {
+                    //storing the id and score of each array
                     var id = items[j, 0];
                     var score = items[j, 1];
 
-                    //Console.WriteLine(studentId + " - " + score);
+                    //Adding the score to dict if id is alreadya available
+                    //If not adding id and score both in else condition(executes atleast once)
                     if (dictionary.ContainsKey(id))
                     {
                         dictionary[id].Add(score);
@@ -447,7 +449,7 @@ namespace Assignment2_DIS_Spring2021
                         dictionary[id] = new List<int>();
                         dictionary[id].Add(score);
                     }
-                    //    Console.WriteLine("Stdent id and score -> " + studentId + " , " + score);
+
                 }
 
                 var keys = dictionary.Keys;
@@ -455,12 +457,15 @@ namespace Assignment2_DIS_Spring2021
                 int i = 0;
                 foreach (var student in dictionary)
                 {
+                    //storing the key into array
                     v[i] = new int[2];
                     v[i][0] = student.Key;
                     var sum = 0;
+                    //Sorting the array
                     var temp = student.Value.ToArray();
                     Array.Sort(temp);
                     var k = 5;
+                    //Taking values and sum them and also finding the average
                     for (int j = temp.Length - 1; j >= 0 && k > 0; j--)
                     {
                         sum += temp[j];
@@ -509,10 +514,14 @@ namespace Assignment2_DIS_Spring2021
             {
                 var set = new HashSet<int>();
 
+                //Checking the condition and adding value to set
+                //Run the loop until it becomes 1
+                //If it ends in 1, the number is happy
                 while (!set.Contains(n) && n != 1)
                 {
                     set.Add(n);
                     var num = 0;
+
 
                     while (n != 0)
                     {
