@@ -122,15 +122,21 @@ namespace Assignment2_DIS_Spring2021
                     //Storing the list length in variable
                     int[] result = new int[nums.Length];
 
+                    //Adding the first half of the digits by seperating 0
+                    //Like [2,5,1,3,4,7] will be [2,0,5,0,1,0]
+                    //Later 0's will be replaced by other half of the digits
+
                     for (int i = 0; i < n; i++)
                     {
                         result[i * 2] = nums[i];
                     }
-
+                    //Here 0's replacing with other half of the array
+                    //[2,0,5,0,1,0] will be [2,3,5,4,1,7]
                     for (int j = 1; j < n + 1; j++)
                     {
                         result[(j * 2) - 1] = nums[n + j - 1];
                     }
+                    //Joing the values in the array to string format
                     var result1 = string.Join(",", result);
 
                     Console.WriteLine("[" + result1 + "]");
@@ -159,17 +165,23 @@ namespace Assignment2_DIS_Spring2021
                 int count = 0;
                 int n = ar2.Length;
 
+                //Looping over array and checkking each element if equal to zero
+                //If not adding the values to index starting 0
+                //if input length is 5 and input is 0,1,0,3,12
+                //After this loop it will be 1,3,12 skipping zero's
                 for (int i = 0; i < n; i++)
                 {
                     if (ar2[i] != 0)
                         ar2[count++] = ar2[i];
                 }
 
+                //zeros will be added in the rest of the array by using it's size
                 while (count < n)
                 {
                     ar2[count++] = 0;
                 }
 
+                //Joining the array values into string var
                 var result = string.Join(",", ar2);
                 Console.WriteLine(result);
 
@@ -203,14 +215,25 @@ namespace Assignment2_DIS_Spring2021
             try
             {
                 int ans = 0;
-                for (int i = 0; i < nums.Length - 1; i++)
+                Dictionary<int, int> pairs = new Dictionary<int, int>();
+
+                for (int i = 0; i < nums.Length; i++)
                 {
-                    for (int j = i + 1; j < nums.Length; j++)
+                    if (!pairs.ContainsKey(nums[i]))
                     {
-                        if (nums[i] == nums[j]) ans++;
+                        pairs[nums[i]] = 0;
                     }
+                    pairs[nums[i]] += 1;
+                }
+                //Using n*(n+1)/2 to get the number of pairs
+
+                foreach (var val in pairs.Keys)
+                {
+                    int temp = pairs[val] - 1;
+                    ans += (temp * (temp + 1)) / 2;
                 }
                 Console.WriteLine(ans);
+
             }
             catch (Exception)
             {
@@ -240,14 +263,16 @@ namespace Assignment2_DIS_Spring2021
         {
             try
             {
+                
                 for (int i = 0; i < nums.Length - 1; i++)
                 {
+                    //Checking if index n and n+1 equals to target
+
                     if (nums[i] + nums[i + 1] == target)
                     {
                         Console.WriteLine("[" + i + ", " + (i + 1) + "]");
                     }
                 }
-                //write your code here.
 
             }
             catch (Exception)
@@ -279,19 +304,25 @@ namespace Assignment2_DIS_Spring2021
         {
             try
             {
-                var values = s.ToCharArray();
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < s.Length; i++)
+                //Converting string to char array to match it with induces array
+                if (s.Length == indices.Length)
                 {
-                    values[indices[i]] = s[i];
-                }
+                    var values = s.ToCharArray();
+                    StringBuilder sb = new StringBuilder();
+                    //stroing the values of s into array using the index value, that stored in indices array
+                    for (int i = 0; i < s.Length; i++)
+                    {
+                        values[indices[i]] = s[i];
+                    }
 
-                foreach (var str in values)
-                {
-                    sb.Append(str.ToString());
-                }
+                    //Appending the values in array to StringBuilder to form a string out of array
+                    foreach (var str in values)
+                    {
+                        sb.Append(str.ToString());
+                    }
 
-                Console.WriteLine(sb.ToString());
+                    Console.WriteLine(sb.ToString());
+                }
 
             }
             catch (Exception)
@@ -325,60 +356,46 @@ namespace Assignment2_DIS_Spring2021
 
             try
             {
-                int str1 = s1.Length;
-                int str2 = s2.Length;
-
-                // Length of both strings must be same  
-                // for one to one corresponance 
-                if (str1 != str2)
-                    return false;
-
-                // To mark visited characters in str2 
-                bool[] marked = new bool[size];
-
-                for (int i = 0; i < size; i++)
-                    marked[i] = false;
-
-
-                // To store mapping of every character 
-                // from str1 to that of str2 and 
-                // Initialize all entries of map as -1. 
-                int[] map = new int[size];
-
-                for (int i = 0; i < size; i++)
-                    map[i] = -1;
-
-                // Process all characters one by on 
-                for (int i = 0; i < str2; i++)
+                if (s1.Length == s2.Length)
                 {
+                    bool[] val1 = new bool[size];
 
-                    // If current character of str1 is  
-                    // seen first time in it. 
-                    if (map[s1[i]] == -1)
+                    for (int i = 0; i < size; i++)
+                        val1[i] = false;
+
+                    // initialize to -1 to store every value
+                    int[] num = new int[size];
+
+                    for (int i = 0; i < size; i++)
+                        num[i] = -1;
+
+                    for (int i = 0; i < s2.Length; i++)
                     {
+                        //if current char is seen 
+                        if (num[s1[i]] == -1)
+                        {
+                            //If current char is already seen
+                            if (val1[s2[i]] == true)
+                                return false;
 
-                        // If current character of str2 
-                        // is already seen, one to 
-                        // one mapping not possible 
-                        if (marked[s2[i]] == true)
+                            // else Mark it as visisted
+                            val1[s2[i]] = true;
+
+                            // store the current char
+                            num[s1[i]] = s2[i];
+                        }
+
+                        // If it's not the first visit of s1, check the previous appearence
+                        else if (num[s1[i]] != s2[i])
                             return false;
-
-                        // Mark current character of  
-                        // str2 as visited 
-                        marked[s2[i]] = true;
-
-                        // Store mapping of current characters 
-                        map[s1[i]] = s2[i];
                     }
 
-                    // If this is not first appearance of current 
-                    // character in str1, then check if previous 
-                    // appearance mapped to same character of str2 
-                    else if (map[s1[i]] != s2[i])
-                        return false;
+                    return true;
                 }
-
-                return true;
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception)
             {
