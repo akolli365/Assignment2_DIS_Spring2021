@@ -8,11 +8,9 @@ namespace Assignment2_DIS_Spring2021
     {
         static void Main(string[] args)
         {
-/*
             //Question1:
             Console.WriteLine("Question 1");
             int[] ar1 = { 2, 5, 1, 3, 4, 7 };
-            //Need to handle n value, if it is higher
             int n1 = 3;
             ShuffleArray(ar1, n1);
             Console.WriteLine("");
@@ -31,8 +29,8 @@ namespace Assignment2_DIS_Spring2021
 
             //Question 4
             Console.WriteLine("Question 4");
-            int[] ar4 = { 3, 2, 4 };
-            int target = 6;
+            int[] ar4 = { 2, 7, 11, 15 };
+            int target = 9;
             TwoSum(ar4, target);
             Console.WriteLine();
 
@@ -56,7 +54,7 @@ namespace Assignment2_DIS_Spring2021
                 Console.WriteLine("No, the given strings are not Isomorphic");
             }
             Console.WriteLine();
-*/
+
             //Question 7
             Console.WriteLine("Question 7");
             int[,] scores = { { 1, 91 }, { 1, 92 }, { 2, 93 }, { 2, 97 }, { 1, 60 }, { 2, 77 }, { 1, 65 }, { 1, 87 }, { 1, 100 }, { 2, 100 }, { 2, 76 } };
@@ -118,20 +116,25 @@ namespace Assignment2_DIS_Spring2021
         {
             try
             {
-                int[] result = new int[nums.Length];
-
-                for (int i = 0; i < n; i++)
+                ///Checking if the array list can be shuffled using /2 
+                if (nums.Length / 2 == n)
                 {
-                    result[i * 2] = nums[i];
-                }
+                    //Storing the list length in variable
+                    int[] result = new int[nums.Length];
 
-                for (int j = 1; j < n + 1; j++)
-                {
-                    result[(j * 2) - 1] = nums[n + j - 1];
-                }
-                var result1 = string.Join(",", nums);
+                    for (int i = 0; i < n; i++)
+                    {
+                        result[i * 2] = nums[i];
+                    }
 
-                Console.WriteLine(result1);
+                    for (int j = 1; j < n + 1; j++)
+                    {
+                        result[(j * 2) - 1] = nums[n + j - 1];
+                    }
+                    var result1 = string.Join(",", result);
+
+                    Console.WriteLine("[" + result1 + "]");
+                }
             }
             catch (Exception)
             {
@@ -241,7 +244,7 @@ namespace Assignment2_DIS_Spring2021
                 {
                     if (nums[i] + nums[i + 1] == target)
                     {
-                        Console.WriteLine("Matched index " + i + ", " + (i + 1));
+                        Console.WriteLine("[" + i + ", " + (i + 1) + "]");
                     }
                 }
                 //write your code here.
@@ -274,7 +277,6 @@ namespace Assignment2_DIS_Spring2021
         /// </summary>
         private static void RestoreString(string s, int[] indices)
         {
-            int ind;
             try
             {
                 var values = s.ToCharArray();
@@ -326,33 +328,52 @@ namespace Assignment2_DIS_Spring2021
                 int str1 = s1.Length;
                 int str2 = s2.Length;
 
+                // Length of both strings must be same  
+                // for one to one corresponance 
                 if (str1 != str2)
                     return false;
 
+                // To mark visited characters in str2 
                 bool[] marked = new bool[size];
 
                 for (int i = 0; i < size; i++)
                     marked[i] = false;
 
+
+                // To store mapping of every character 
+                // from str1 to that of str2 and 
+                // Initialize all entries of map as -1. 
                 int[] map = new int[size];
 
                 for (int i = 0; i < size; i++)
                     map[i] = -1;
 
+                // Process all characters one by on 
                 for (int i = 0; i < str2; i++)
                 {
 
+                    // If current character of str1 is  
+                    // seen first time in it. 
                     if (map[s1[i]] == -1)
                     {
 
+                        // If current character of str2 
+                        // is already seen, one to 
+                        // one mapping not possible 
                         if (marked[s2[i]] == true)
                             return false;
 
+                        // Mark current character of  
+                        // str2 as visited 
                         marked[s2[i]] = true;
 
+                        // Store mapping of current characters 
                         map[s1[i]] = s2[i];
                     }
 
+                    // If this is not first appearance of current 
+                    // character in str1, then check if previous 
+                    // appearance mapped to same character of str2 
                     else if (map[s1[i]] != s2[i])
                         return false;
                 }
@@ -387,63 +408,53 @@ namespace Assignment2_DIS_Spring2021
         /// 0 <= scorei <= 100
         /// For each IDi, there will be at least five scores.
         /// </summary>
-        private static  void HighFive(int[,] items)
+        private static void HighFive(int[,] items)
         {
             try
             {
-                var dict = new SortedDictionary<int, List<int>>();
+                var dictionary = new SortedDictionary<int, List<int>>();
 
-                Console.WriteLine("Length is -> " + items.Length / 2);
+                //Console.WriteLine("Length is -> " + items.Length / 2);
                 for (int j = 0; j < items.Length / 2; j++)
                 {
-                    var studentId = items[j, 0];
+                    var id = items[j, 0];
                     var score = items[j, 1];
 
                     //Console.WriteLine(studentId + " - " + score);
-                    if (dict.ContainsKey(studentId))
+                    if (dictionary.ContainsKey(id))
                     {
-                        dict[studentId].Add(score);
+                        dictionary[id].Add(score);
                     }
                     else
                     {
-                        dict[studentId] = new List<int>();
-                        dict[studentId].Add(score);
+                        dictionary[id] = new List<int>();
+                        dictionary[id].Add(score);
                     }
                     //    Console.WriteLine("Stdent id and score -> " + studentId + " , " + score);
                 }
 
-                Console.WriteLine("Test 1");
-                // now walk through the dict
-                var keys = dict.Keys;
-                var ans = new int[keys.Count][];
+                var keys = dictionary.Keys;
+                var v = new int[keys.Count][];
                 int i = 0;
-                foreach (var student in dict)
+                foreach (var student in dictionary)
                 {
-                    ans[i] = new int[2];
-                    ans[i][0] = student.Key;
+                    v[i] = new int[2];
+                    v[i][0] = student.Key;
                     var sum = 0;
-                    // sort the score and get the first 5
                     var temp = student.Value.ToArray();
                     Array.Sort(temp);
                     var k = 5;
                     for (int j = temp.Length - 1; j >= 0 && k > 0; j--)
                     {
-                        //Console.WriteLine(temp[j]);
                         sum += temp[j];
                         k--;
                     }
-                    ans[i][1] = sum / 5;
+                    v[i][1] = sum / 5;
                     i++;
                 }
-                for (int k = 0; k < ans.Length; k++)
-                {
-                    for (int j = 0; j < ans[k].Length; j++)
-                    {
-                        Console.WriteLine("The answer is -> " + ans[k][j]);
-                        // Console.WriteLine("The answer is -> " + ans[1]);
-                        //return ans;
-                    }
-                }
+
+                Console.Write("[[" + v[0][0] + "," + v[0][1] + "],");
+                Console.WriteLine("[" + v[1][0] + "," + v[1][1] + "]]");
             }
             catch (Exception)
             {
@@ -479,8 +490,23 @@ namespace Assignment2_DIS_Spring2021
         {
             try
             {
-                //write your code here.
-                return false;
+                var set = new HashSet<int>();
+
+                while (!set.Contains(n) && n != 1)
+                {
+                    set.Add(n);
+                    var num = 0;
+
+                    while (n != 0)
+                    {
+                        num = num + (int)Math.Pow(n % 10, 2);
+                        n = n / 10;
+                    }
+
+                    n = num;
+                }
+
+                return n==1;
             }
             catch (Exception)
             {
